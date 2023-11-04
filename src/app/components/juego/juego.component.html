@@ -1,0 +1,5 @@
+<div *ngIf="level.boardMap" class="grid-container"
+    [style]="{'grid-template-columns': 'repeat(' + numeroColumnas + ', 1fr)'}">
+    <app-celda-juego *ngFor="let celdaJuego of level.boardMap; let i = index" [id]="i"
+        [value]="celdaJuego"></app-celda-juego>
+</div>

@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'angular-pac-man';
+  title = 'Angular Pac-man';
+  logoUri = './assets/rubik-hover.png';
 }

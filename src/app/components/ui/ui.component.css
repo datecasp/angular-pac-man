@@ -1,0 +1,21 @@
+.uiRender {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 2em;
+    margin: 5% auto;
+  }
+  
+  .juego {
+    width: 562px;
+    height: 562px;
+    border: 1px solid black;
+  }
+
+  .menuJuego{
+        width: 146px;
+        height: 520px;
+        padding: 1rem;
+        border: 1px solid black;
+  }
