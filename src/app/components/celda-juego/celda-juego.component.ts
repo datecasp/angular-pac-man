@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class CeldaJuegoComponent implements OnInit {
   @Input() id: number = -1;
   @Input() value: number = -1;
-  color: string = '';
+  clase: string = '';
 
   ngOnInit(): void {
     this.paintBoard();
@@ -16,17 +16,20 @@ export class CeldaJuegoComponent implements OnInit {
 
   private paintBoard() {
     switch (this.value) {
+      case 0:
+        this.clase = 'celda-juego pac-dot';
+        break;
       case 1:
-        this.color = '#000';
+        this.clase = 'celda-juego muro';
         break;
       case 2:
-        this.color = '#FFF';
+        this.clase = 'celda-juego';
         break;
-      case 0:
-        this.color = '#FFF';
+        case 3:
+        this.clase = 'celda-juego power-pellet';
         break;
       case 4:
-        this.color = '#FFF';
+        this.clase = 'celda-juego';
         break;
     }
   }
