@@ -30,8 +30,13 @@ export class JuegoService {
 
   public MoverPlayer(e: KeyboardEvent) {
     var posicionAnterior;
+    var numeroFilas = this.level.boardMap.length / this.level.numeroColumnas;
     switch (e.key) {
       case 'q':
+        posicionAnterior = this.level.playerPosicion;
+        if (this.level.playerPosicion - numeroFilas < 0) {
+          this.level.playerPosicion += this.level.numeroColumnas * numeroFilas;
+        }
         if (this.level.boardMap[this.level.playerPosicion - this.level.numeroColumnas] !== 1) {
           if (this.level.boardMap[this.level.playerPosicion - this.level.numeroColumnas] == 0) {
             this.AddScore(10);
@@ -40,11 +45,15 @@ export class JuegoService {
             this.AddScore(25);
           }
           this.level.boardMap[this.level.playerPosicion - this.level.numeroColumnas] = 5;
-          this.level.boardMap[this.level.playerPosicion] = 2;
+          this.level.boardMap[posicionAnterior] = 2;
           this.level.playerPosicion = this.level.playerPosicion - this.level.numeroColumnas;
         }
         break;
       case 'a':
+        posicionAnterior = this.level.playerPosicion;
+        if (this.level.playerPosicion + numeroFilas > this.level.boardMap.length) {
+          this.level.playerPosicion -= this.level.numeroColumnas * numeroFilas;
+        }
         if (this.level.boardMap[this.level.playerPosicion + this.level.numeroColumnas] !== 1) {
           if (this.level.boardMap[this.level.playerPosicion + this.level.numeroColumnas] === 0) {
             this.AddScore(10);
@@ -53,7 +62,7 @@ export class JuegoService {
             this.AddScore(25);
           }
           this.level.boardMap[this.level.playerPosicion + this.level.numeroColumnas] = 5;
-          this.level.boardMap[this.level.playerPosicion] = 2;
+          this.level.boardMap[posicionAnterior] = 2;
           this.level.playerPosicion = this.level.playerPosicion + this.level.numeroColumnas;
         }
         break;
