@@ -29,6 +29,7 @@ export class JuegoService {
   }
 
   public MoverPlayer(e: KeyboardEvent) {
+    var posicionAnterior;
     switch (e.key) {
       case 'q':
         if (this.level.boardMap[this.level.playerPosicion - this.level.numeroColumnas] !== 1) {
@@ -57,6 +58,10 @@ export class JuegoService {
         }
         break;
       case 'p':
+        posicionAnterior = this.level.playerPosicion;
+        if ((this.level.playerPosicion + 1) % this.level.numeroColumnas == 0) {
+          this.level.playerPosicion -= this.level.numeroColumnas;
+        }
         if (this.level.boardMap[this.level.playerPosicion + 1] !== 1) {
           if (this.level.boardMap[this.level.playerPosicion + 1] === 0) {
             this.AddScore(10);
@@ -65,11 +70,15 @@ export class JuegoService {
             this.AddScore(25);
           }
           this.level.boardMap[this.level.playerPosicion + 1] = 5;
-          this.level.boardMap[this.level.playerPosicion] = 2;
+          this.level.boardMap[posicionAnterior] = 2;
           this.level.playerPosicion = this.level.playerPosicion + 1;
         }
         break;
       case 'o':
+        posicionAnterior = this.level.playerPosicion;
+        if (this.level.playerPosicion % this.level.numeroColumnas == 0) {
+          this.level.playerPosicion += this.level.numeroColumnas;
+        }
         if (this.level.boardMap[this.level.playerPosicion - 1] !== 1) {
           if (this.level.boardMap[this.level.playerPosicion - 1] === 0) {
             this.AddScore(10);
@@ -78,7 +87,7 @@ export class JuegoService {
             this.AddScore(25);
           }
           this.level.boardMap[this.level.playerPosicion - 1] = 5;
-          this.level.boardMap[this.level.playerPosicion] = 2;
+          this.level.boardMap[posicionAnterior] = 2;
           this.level.playerPosicion = this.level.playerPosicion - 1;
         }
         break;
@@ -90,7 +99,7 @@ export class JuegoService {
     this.score.next(this.previousScore);
   }
 
-  public GetScoreObservable(){
+  public GetScoreObservable() {
     return this.score.asObservable();
   }
 
