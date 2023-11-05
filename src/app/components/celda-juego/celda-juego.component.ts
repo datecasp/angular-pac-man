@@ -25,11 +25,14 @@ export class CeldaJuegoComponent implements OnInit {
       case 2:
         this.clase = 'celda-juego';
         break;
-        case 3:
+      case 3:
         this.clase = 'celda-juego power-pellet';
         break;
       case 4:
         this.clase = 'celda-juego';
+        break;
+      case 5:
+        this.clase = 'celda-juego pac-man';
         break;
     }
   }
