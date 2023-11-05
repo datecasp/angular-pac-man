@@ -9,8 +9,8 @@ import { Subject } from 'rxjs';
 export class JuegoService {
   level: Level = new Level();
   levels: Level[] = [];
-  previousScore: number = 0;
-  private score = new Subject<number>();
+  score: number = 0;
+  private scoreObs = new Subject<number>();
 
   constructor() {
     //Asigna los niveles de la clase Levels
@@ -104,12 +104,12 @@ export class JuegoService {
   }
 
   public AddScore(add: number) {
-    this.previousScore += add;
-    this.score.next(this.previousScore);
+    this.score += add;
+    this.scoreObs.next(this.score);
   }
 
   public GetScoreObservable() {
-    return this.score.asObservable();
+    return this.scoreObs.asObservable();
   }
 
 
