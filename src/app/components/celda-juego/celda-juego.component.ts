@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 @Component({
   selector: 'app-celda-juego',
   templateUrl: './celda-juego.component.html',
-  styleUrls: ['./celda-juego.component.css']
+  styleUrls: ['./celda-juego.component.css'],
 })
 export class CeldaJuegoComponent implements OnInit {
   @Input() id: number = -1;
@@ -33,6 +33,18 @@ export class CeldaJuegoComponent implements OnInit {
         break;
       case 5:
         this.clase = 'celda-juego pac-man';
+        break;
+      case 6:
+        this.clase = 'celda-juego blinky';
+        break;
+      case 7:
+        this.clase = 'celda-juego pinky';
+        break;
+      case 8:
+        this.clase = 'celda-juego inky';
+        break;
+      case 9:
+        this.clase = 'celda-juego clyde';
         break;
     }
   }
