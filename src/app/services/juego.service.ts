@@ -8,21 +8,28 @@ import { Subject } from 'rxjs';
 })
 export class JuegoService {
   level: Level = new Level();
+  private levelObs = new Subject<Level>();
+  spreadLevel: Level = new Level();
   levels: Level[] = [];
   numCeldas: number = -1;
   score: number = 0;
   private scoreObs = new Subject<number>();
   playerCanMove: boolean = true;
+  primeraCarga: boolean = true;
 
   constructor() {
     //Asigna los niveles de la clase Levels
     this.levels = Levels;
   }
 
-  public GetLevel(id: number): Level {
+  public GetLevel(idLevel: number): Level {
     //Posiciona a Player en su posición de inicio
-    this.levels[id].boardMap[this.levels[id].playerPosicion] = 5;
-    this.level = Levels[id];
+    this.levels[idLevel].boardMap[this.levels[idLevel].playerPosicion] = 5;
+    this.level = Levels[idLevel];
+    if (this.primeraCarga) {
+      this.primeraCarga = false;
+      this.spreadLevel = JSON.parse(JSON.stringify(this.level));
+    }
     this.numCeldas = this.level.boardMap.length;
     return this.level;
   }
@@ -32,10 +39,38 @@ export class JuegoService {
     return this.GetLevel(idLevel);
   }
 
-  InstanciaFantasma(fantasma: number, posicion: number) {
-    this.CheckMoverFantasma(Math.floor(this.numCeldas / 2) + posicion);
-    this.level.boardMap[Math.floor(this.numCeldas / 2) + posicion] =
-      6 + fantasma;
+  public VolverAJugar(idLevel: number) {
+    this.playerCanMove = true;
+    this.level = JSON.parse(JSON.stringify(this.spreadLevel));
+    this.level.boardMap[this.level.playerPosicion] = 5;
+    this.levelObs.next(this.level);
+    this.SacaFantasmasInit();
+  }
+
+  GetLevelObservable() {
+    return this.levelObs.asObservable();
+  }
+
+  SacaFantasmasInit() {
+    setTimeout(() => {
+      this.InstanciaFantasma(0);
+    }, 1500);
+    setTimeout(() => {
+      this.InstanciaFantasma(1);
+    }, 2000);
+    setTimeout(() => {
+      this.InstanciaFantasma(2);
+    }, 2500);
+    setTimeout(() => {
+      this.InstanciaFantasma(3);
+    }, 3000);
+  }
+
+  InstanciaFantasma(fantasma: number) {
+    this.CheckMoverFantasma(
+      this.level.boardMap[this.level.fantasmasInitPos[fantasma]]
+    );
+    this.level.boardMap[this.level.fantasmasInitPos[fantasma]] = 6 + fantasma;
   }
 
   public CheckMoverFantasma(posFantasma: number) {
@@ -66,13 +101,19 @@ export class JuegoService {
             if (
               this.level.boardMap[
                 this.level.playerPosicion - this.level.numeroColumnas
-              ] == 0
+              ] > 5 //fantasma
+            ) {
+              this.GameOver();
+            } else if (
+              this.level.boardMap[
+                this.level.playerPosicion - this.level.numeroColumnas
+              ] == 0 //coin
             ) {
               this.AddScore(10);
             } else if (
               this.level.boardMap[
                 this.level.playerPosicion - this.level.numeroColumnas
-              ] === 3
+              ] === 3 //power-coin
             ) {
               this.AddScore(25);
             }
@@ -99,6 +140,12 @@ export class JuegoService {
             ] !== 1
           ) {
             if (
+              this.level.boardMap[
+                this.level.playerPosicion + this.level.numeroColumnas
+              ] > 5 //fantasma
+            ) {
+              this.GameOver();
+            } else if (
               this.level.boardMap[
                 this.level.playerPosicion + this.level.numeroColumnas
               ] === 0
@@ -128,7 +175,13 @@ export class JuegoService {
             this.level.playerPosicion -= this.level.numeroColumnas;
           }
           if (this.level.boardMap[this.level.playerPosicion + 1] !== 1) {
-            if (this.level.boardMap[this.level.playerPosicion + 1] === 0) {
+            if (
+              this.level.boardMap[this.level.playerPosicion + 1] > 5 //fantasma
+            ) {
+              this.GameOver();
+            } else if (
+              this.level.boardMap[this.level.playerPosicion + 1] === 0
+            ) {
               this.AddScore(10);
             } else if (
               this.level.boardMap[this.level.playerPosicion + 1] === 3
@@ -146,7 +199,13 @@ export class JuegoService {
             this.level.playerPosicion += this.level.numeroColumnas;
           }
           if (this.level.boardMap[this.level.playerPosicion - 1] !== 1) {
-            if (this.level.boardMap[this.level.playerPosicion - 1] === 0) {
+            if (
+              this.level.boardMap[this.level.playerPosicion - 1] > 5 //fantasma
+            ) {
+              this.GameOver();
+            } else if (
+              this.level.boardMap[this.level.playerPosicion - 1] === 0
+            ) {
               this.AddScore(10);
             } else if (
               this.level.boardMap[this.level.playerPosicion - 1] === 3
@@ -169,5 +228,10 @@ export class JuegoService {
 
   public GetScoreObservable() {
     return this.scoreObs.asObservable();
+  }
+
+  public GameOver() {
+    this.playerCanMove = false;
+    alert('Game Over!!');
   }
 }

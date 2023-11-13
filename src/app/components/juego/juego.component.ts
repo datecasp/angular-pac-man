@@ -22,9 +22,11 @@ export class JuegoComponent implements OnInit {
     this.numeroColumnas = this.level.numeroColumnas;
     this.numCeldas = this.level.boardMap.length;
 
-    setTimeout(() => {
-      this.InstanciaFantasma(4);
-    }, 1000);
+    this._juegoService.GetLevelObservable().subscribe((nuevoLevel) => {
+      this.level = nuevoLevel;
+    });
+
+    this.SacaFantasmasInit();
   }
 
   private InicioJuego(idLevel: number): Level {
@@ -36,10 +38,11 @@ export class JuegoComponent implements OnInit {
     this._juegoService.MoverPlayer(event);
   }
 
-  InstanciaFantasma(numero: number, fantasma: number = 0) {
-    for (var i = 0; i < numero; i++) {
-      this._juegoService.InstanciaFantasma(fantasma, i-2)
-      fantasma++;
-    }
+  SacaFantasmasInit() {
+    this._juegoService.SacaFantasmasInit();
+  }
+
+  InstanciaFantasma(fantasma: number = 0) {
+    this._juegoService.InstanciaFantasma(fantasma);
   }
 }

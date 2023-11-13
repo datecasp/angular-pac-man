@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JuegoService } from 'src/app/services/juego.service';
 
+
 @Component({
   selector: 'app-menu-juego',
   templateUrl: './menu-juego.component.html',
@@ -18,4 +19,7 @@ export class MenuJuegoComponent implements OnInit {
     });
   }
 
+  VolverAJugar(){
+    this._juegoService.VolverAJugar(0);
+  }
 }

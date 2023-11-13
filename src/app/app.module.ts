@@ -6,6 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { JuegoService } from './services/juego.service';
 
+import { MatButtonModule } from '@angular/material/button';
+
 import { AppComponent } from './app.component';
 import { UIComponent } from './components/ui/ui.component';
 import { JuegoComponent } from './components/juego/juego.component';
@@ -24,7 +26,8 @@ import { CeldaJuegoComponent } from './components/celda-juego/celda-juego.compon
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NgbModule
+    NgbModule,
+    MatButtonModule
   ],
   providers: [JuegoService],
   bootstrap: [AppComponent]
