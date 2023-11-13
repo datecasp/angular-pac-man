@@ -68,7 +68,7 @@ export class JuegoService {
 
   InstanciaFantasma(fantasma: number) {
     this.CheckMoverFantasma(
-      this.level.boardMap[this.level.fantasmasInitPos[fantasma]]
+      this.level.fantasmasInitPos[fantasma]
     );
     this.level.boardMap[this.level.fantasmasInitPos[fantasma]] = 6 + fantasma;
   }
