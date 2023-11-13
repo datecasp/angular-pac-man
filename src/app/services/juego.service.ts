@@ -53,20 +53,20 @@ export class JuegoService {
 
   SacaFantasmasInit() {
     setTimeout(() => {
-      this.InstanciaFantasma(0);
+      this.PintaFantasmaInit(0);
     }, 1500);
     setTimeout(() => {
-      this.InstanciaFantasma(1);
+      this.PintaFantasmaInit(1);
     }, 2000);
     setTimeout(() => {
-      this.InstanciaFantasma(2);
+      this.PintaFantasmaInit(2);
     }, 2500);
     setTimeout(() => {
-      this.InstanciaFantasma(3);
+      this.PintaFantasmaInit(3);
     }, 3000);
   }
 
-  InstanciaFantasma(fantasma: number) {
+  PintaFantasmaInit(fantasma: number) {
     this.CheckMoverFantasma(this.level.fantasmasInitPos[fantasma]);
     this.level.boardMap[this.level.fantasmasInitPos[fantasma]] = 6 + fantasma;
   }
@@ -74,6 +74,16 @@ export class JuegoService {
   public CheckMoverFantasma(posFantasma: number) {
     if (this.level.boardMap[posFantasma] === 5) {
       this.GameOver();
+    }
+  }
+
+  public MoverFantasma(fantasma: number) {
+    var direccion = Math.floor(Math.random() * 4);
+    switch (direccion) {
+      case 0:
+      case 1:
+      case 2:
+      case 3:
     }
   }
 

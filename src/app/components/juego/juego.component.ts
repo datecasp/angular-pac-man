@@ -42,7 +42,4 @@ export class JuegoComponent implements OnInit {
     this._juegoService.SacaFantasmasInit();
   }
 
-  InstanciaFantasma(fantasma: number = 0) {
-    this._juegoService.InstanciaFantasma(fantasma);
-  }
 }
