@@ -67,18 +67,13 @@ export class JuegoService {
   }
 
   InstanciaFantasma(fantasma: number) {
-    this.CheckMoverFantasma(
-      this.level.fantasmasInitPos[fantasma]
-    );
+    this.CheckMoverFantasma(this.level.fantasmasInitPos[fantasma]);
     this.level.boardMap[this.level.fantasmasInitPos[fantasma]] = 6 + fantasma;
   }
 
   public CheckMoverFantasma(posFantasma: number) {
     if (this.level.boardMap[posFantasma] === 5) {
-      this.playerCanMove = false;
-      setTimeout(() => {
-        alert('Pausa de 1 segundo completada. Ahora puedes continuar.');
-      }, 1000);
+      this.GameOver();
     }
   }
 
