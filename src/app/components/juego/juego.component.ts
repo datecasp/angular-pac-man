@@ -27,6 +27,21 @@ export class JuegoComponent implements OnInit {
     });
 
     this.SacaFantasmasInit();
+
+    setTimeout(() => {
+      setInterval(() => {
+        this.MueveFantasmas(0);
+      }, 250);
+      setInterval(() => {
+        this.MueveFantasmas(1);
+      }, 350);
+      setInterval(() => {
+        this.MueveFantasmas(2);
+      }, 300);
+      setInterval(() => {
+        this.MueveFantasmas(3);
+      }, 400);
+    }, 1500);
   }
 
   private InicioJuego(idLevel: number): Level {
@@ -42,4 +57,7 @@ export class JuegoComponent implements OnInit {
     this._juegoService.SacaFantasmasInit();
   }
 
+  MueveFantasmas(fantasmaId: number) {
+    this._juegoService.MueveFantasma(fantasmaId);
+  }
 }

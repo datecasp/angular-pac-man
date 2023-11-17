@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Level } from '../models/level';
-import { Levels } from '../levels/levels';
+import { Levels } from '../data/levels';
 import { Subject } from 'rxjs';
+import { Ghost } from '../models/ghost';
+import { Ghosts } from '../data/ghosts';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +18,10 @@ export class JuegoService {
   private scoreObs = new Subject<number>();
   playerCanMove: boolean = true;
   primeraCarga: boolean = true;
+  fantasma0: Ghost = new Ghost();
+  fantasma1: Ghost = new Ghost();
+  fantasma2: Ghost = new Ghost();
+  fantasma3: Ghost = new Ghost();
 
   constructor() {
     //Asigna los niveles de la clase Levels
@@ -53,37 +59,110 @@ export class JuegoService {
 
   SacaFantasmasInit() {
     setTimeout(() => {
-      this.PintaFantasmaInit(0);
+      this.fantasma0 = Ghosts[0];
+      this.fantasma0.posicion = this.level.fantasmasInitPos[0];
+      this.fantasma0.celdaAnterior =
+        this.level.boardMap[this.fantasma0.posicion];
+      this.PintaFantasma(this.fantasma0);
     }, 1500);
     setTimeout(() => {
-      this.PintaFantasmaInit(1);
+      this.fantasma1 = Ghosts[1];
+      this.fantasma1.posicion = this.level.fantasmasInitPos[1];
+      this.fantasma1.celdaAnterior =
+        this.level.boardMap[this.fantasma1.posicion];
+      this.PintaFantasma(this.fantasma1);
     }, 2000);
     setTimeout(() => {
-      this.PintaFantasmaInit(2);
+      this.fantasma2 = Ghosts[2];
+      this.fantasma2.posicion = this.level.fantasmasInitPos[2];
+      this.fantasma2.celdaAnterior =
+        this.level.boardMap[this.fantasma2.posicion];
+      this.PintaFantasma(this.fantasma2);
     }, 2500);
     setTimeout(() => {
-      this.PintaFantasmaInit(3);
+      this.fantasma3 = Ghosts[3];
+      this.fantasma3.posicion = this.level.fantasmasInitPos[3];
+      this.fantasma3.celdaAnterior =
+        this.level.boardMap[this.fantasma3.posicion];
+      this.PintaFantasma(this.fantasma3);
     }, 3000);
   }
 
-  PintaFantasmaInit(fantasma: number) {
-    this.CheckMoverFantasma(this.level.fantasmasInitPos[fantasma]);
-    this.level.boardMap[this.level.fantasmasInitPos[fantasma]] = 6 + fantasma;
+  PintaFantasma(fantasma: Ghost) {
+    this.CheckMoverFantasma(fantasma.posicion);
+    this.level.boardMap[fantasma.posicion] = 6 + fantasma.id;
   }
 
-  public CheckMoverFantasma(posFantasma: number) {
+  public CheckMoverFantasma(posFantasma: number): boolean {
     if (this.level.boardMap[posFantasma] === 5) {
-      this.GameOver();
+      this.GameOver(0);
+    } else if (
+      this.level.boardMap[posFantasma] > 5 ||
+      this.level.boardMap[posFantasma] === 1
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public MueveFantasma(idFantasma: number) {
+    if (idFantasma === 0) {
+      this.MoverFantasma(this.fantasma0);
+    }
+    if (idFantasma === 1) {
+      this.MoverFantasma(this.fantasma1);
+    }
+    if (idFantasma === 2) {
+      this.MoverFantasma(this.fantasma2);
+    }
+    if (idFantasma === 3) {
+      this.MoverFantasma(this.fantasma3);
     }
   }
 
-  public MoverFantasma(fantasma: number) {
+  private MoverFantasma(fantasma: Ghost) {
     var direccion = Math.floor(Math.random() * 4);
     switch (direccion) {
-      case 0:
-      case 1:
-      case 2:
-      case 3:
+      case 0: //Arriba
+        if (
+          this.CheckMoverFantasma(fantasma.posicion - this.level.numeroColumnas)
+        ) {
+          this.level.boardMap[fantasma.posicion] = fantasma.celdaAnterior;
+          fantasma.celdaAnterior =
+            this.level.boardMap[fantasma.posicion - this.level.numeroColumnas];
+          fantasma.posicion = fantasma.posicion - this.level.numeroColumnas;
+          this.level.boardMap[fantasma.posicion] =
+            6 + fantasma.id;
+        }
+        break;
+      case 1: //Abajo
+        if (
+          this.CheckMoverFantasma(fantasma.posicion + this.level.numeroColumnas)
+        ) {
+          this.level.boardMap[fantasma.posicion] = fantasma.celdaAnterior;
+          fantasma.celdaAnterior =
+            this.level.boardMap[fantasma.posicion + this.level.numeroColumnas];
+          fantasma.posicion = fantasma.posicion + this.level.numeroColumnas;
+          this.level.boardMap[fantasma.posicion] =
+            6 + fantasma.id;
+        }
+        break;
+      case 2: //Izquierda
+        if (this.CheckMoverFantasma(fantasma.posicion - 1)) {
+          this.level.boardMap[fantasma.posicion] = fantasma.celdaAnterior;
+          fantasma.celdaAnterior = this.level.boardMap[fantasma.posicion - 1];
+          fantasma.posicion = fantasma.posicion - 1;
+          this.level.boardMap[fantasma.posicion] = 6 + fantasma.id;
+        }
+        break;
+      case 3: //Derecha
+        if (this.CheckMoverFantasma(fantasma.posicion + 1)) {
+          this.level.boardMap[fantasma.posicion] = fantasma.celdaAnterior;
+          fantasma.celdaAnterior = this.level.boardMap[fantasma.posicion + 1];
+          fantasma.posicion = fantasma.posicion + 1;
+          this.level.boardMap[fantasma.posicion] = 6 + fantasma.id;
+        }
     }
   }
 
@@ -108,7 +187,7 @@ export class JuegoService {
                 this.level.playerPosicion - this.level.numeroColumnas
               ] > 5 //fantasma
             ) {
-              this.GameOver();
+              this.GameOver(0);
             } else if (
               this.level.boardMap[
                 this.level.playerPosicion - this.level.numeroColumnas
@@ -149,7 +228,7 @@ export class JuegoService {
                 this.level.playerPosicion + this.level.numeroColumnas
               ] > 5 //fantasma
             ) {
-              this.GameOver();
+              this.GameOver(0);
             } else if (
               this.level.boardMap[
                 this.level.playerPosicion + this.level.numeroColumnas
@@ -183,7 +262,7 @@ export class JuegoService {
             if (
               this.level.boardMap[this.level.playerPosicion + 1] > 5 //fantasma
             ) {
-              this.GameOver();
+              this.GameOver(0);
             } else if (
               this.level.boardMap[this.level.playerPosicion + 1] === 0
             ) {
@@ -207,7 +286,7 @@ export class JuegoService {
             if (
               this.level.boardMap[this.level.playerPosicion - 1] > 5 //fantasma
             ) {
-              this.GameOver();
+              this.GameOver(0);
             } else if (
               this.level.boardMap[this.level.playerPosicion - 1] === 0
             ) {
@@ -235,8 +314,9 @@ export class JuegoService {
     return this.scoreObs.asObservable();
   }
 
-  public GameOver() {
+  public GameOver(idLevel: number) {
     this.playerCanMove = false;
     alert('Game Over!!');
+    this.InicioJuego(idLevel);
   }
 }
